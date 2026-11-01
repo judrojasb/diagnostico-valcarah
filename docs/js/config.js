@@ -4,9 +4,8 @@
  * Los enlaces vacíos ('') usan automáticamente https://www.valcarah.com.
  */
 window.VALCARAH_CONFIG = {
-  // Dirección del Worker de Cloudflare. Sustituye TU-SUBDOMINIO por el tuyo
-  // (lo ves en el panel de Cloudflare, en Workers y Pages).
-  workerUrl: 'https://diagnostico-valcarah.TU-SUBDOMINIO.workers.dev',
+  // Dirección del Worker de Cloudflare.
+  workerUrl: 'https://diagnostico-valcarah.rojasb-judith.workers.dev',
 
   enlaces: {
     web: 'https://www.valcarah.com',
