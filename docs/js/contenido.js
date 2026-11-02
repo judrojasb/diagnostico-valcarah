@@ -112,7 +112,7 @@ window.VALCARAH_CONTENIDO = {
   // Pantalla final: datos obligatorios para recibir la orientación por correo.
   correo: {
     antetitulo: 'Autoevaluación Valcarah',
-    titulo: 'Pon tus datos para añadir tus respuestas.',
+    titulo: 'Pon tus datos para recibir tus respuestas en tu correo.',
     campoNombre: 'Nombre',
     campoCorreo: 'Correo electrónico',
     campoTelefono: 'Teléfono',
