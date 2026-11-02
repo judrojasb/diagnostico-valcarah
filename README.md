@@ -17,6 +17,8 @@
 
 **Puntuación:** en las preguntas 1 a 6, la primera opción suma a caos, la segunda a claridad y la tercera a creación. Las preguntas 7 a 10 no puntúan. Si hay empate, gana la etapa anterior (caos > claridad > creación). El mensaje adaptado depende de la respuesta a la pregunta 7.
 
+**Datos obligatorios:** al terminar las 10 preguntas no se muestra el resultado. La persona tiene que dejar nombre, correo y teléfono, y recibe su orientación por correo (automatización de Systeme). La casilla de novedades sigue siendo opcional.
+
 **Origen:** `https://diagnostico.valcarah.com/?origen=taller-mayo` envía `taller-mayo`. Sin parámetro, se envía `directo`.
 
 ### Publicar con GitHub Pages
@@ -31,12 +33,12 @@
 
 ### Qué hace
 
-- **Con correo:**
+- **Siempre (nombre, correo y teléfono son obligatorios; si falta alguno, responde 400):**
   1. Busca el contacto en Systeme por su correo. Si no existe, lo crea; si existe, lo actualiza.
-  2. Rellena los campos `etapa`, `limite`, `apoyo`, `emprender`, `origen` y `respuestas`, y también el nombre (`first_name`), si lo hay.
+  2. Rellena los campos `etapa`, `limite`, `apoyo`, `emprender`, `origen` y `respuestas`, el nombre (`first_name`) y el teléfono (`phone_number`, campo estándar de Systeme).
   3. Añade la etiqueta `diagnostico-caos`, `diagnostico-claridad` o `diagnostico-creacion`. Primero quita las etiquetas `diagnostico-…` que el contacto ya tuviera, para que la automatización vuelva a enviar el correo si la persona repite la autoevaluación.
   4. Añade `newsletter` **solo** si la casilla está marcada. Nunca la quita.
-- **Sin correo:** guarda la fecha, el resultado, las respuestas y el origen en KV. No guarda ningún dato personal.
+- **KV:** ya no se guarda nada nuevo. Los datos antiguos sin correo se pueden seguir descargando en `/exportar`.
 - Solo acepta peticiones que llegan desde `https://diagnostico.valcarah.com`.
 - **No crea campos personalizados.** Tienen que existir en Systeme con estos slugs exactos: `etapa`, `limite`, `apoyo`, `emprender`, `origen` y `respuestas`. Las etiquetas, en cambio, las crea si no existen.
 

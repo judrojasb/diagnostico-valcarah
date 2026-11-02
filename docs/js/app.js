@@ -18,8 +18,7 @@
     indice: 0,
     respuestas: new Array(C.preguntas.length).fill(null), // índices 0..n
     resultado: null,
-    origen: leerOrigen(),
-    enviado: false
+    origen: leerOrigen()
   };
 
   /* ---------- Utilidades ---------- */
@@ -187,7 +186,7 @@
           if (estado.respuestas[n] === null) return;
           if (ultima) {
             estado.resultado = calcularResultado(estado.respuestas);
-            pantallaResultado();
+            pantallaDatos();
           } else {
             estado.indice = n + 1;
             pantallaPregunta();
@@ -223,172 +222,123 @@
     return ETAPAS[ganadora];
   }
 
-  /* ---------- Resultado ---------- */
+  /* ---------- Datos obligatorios ----------
+     Al terminar no se muestra el resultado: la persona deja su nombre,
+     correo y teléfono, y recibe la orientación por correo (Systeme). */
 
-  function pantallaResultado() {
-    var r = C.resultados[estado.resultado];
-    var h = r.herramienta;
-    var limite = estado.respuestas[6];
+  function pantallaDatos() {
     var co = C.correo;
 
-    var etapas = ETAPAS.map(function (clave) {
-      var e = C.resultados[clave];
-      var actual = clave === estado.resultado;
-      return '<li' + (actual ? ' class="actual" aria-current="true"' : '') + '>' + e.numero + ' · ' + escapar(e.etapa) + '</li>';
-    }).join('');
-
-    var pasos = h.pasos.map(function (paso) {
-      var texto = '<strong>' + enriquecer(paso.t) + '</strong>' + (paso.d ? ' ' + enriquecer(paso.d) : '');
-      var sub = paso.sub
-        ? '<ul>' + paso.sub.map(function (s) { return '<li>' + enriquecer(s) + '</li>'; }).join('') + '</ul>'
-        : '';
-      return '<li>' + texto + sub + '</li>';
-    }).join('');
-
     var html =
-      '<header class="resultado__cabecera">' +
-        '<p class="numeral" aria-hidden="true">' + r.numero + '</p>' +
-        '<h1 class="resultado__etapa" tabindex="-1" data-foco>' +
-          '<span class="visualmente-oculto">Resultado ' + r.numero + ': </span>' + escapar(r.etapa) +
-        '</h1>' +
-        '<p class="antetitulo">' + escapar(r.subtitulo) + '</p>' +
-        '<ul class="etapas" aria-label="' + escapar(UI.etapas) + '">' + etapas + '</ul>' +
-      '</header>' +
-
-      '<h2 class="titulo resultado__titular">' + escapar(r.titular) + '</h2>' +
-      parrafos(r.parrafos) +
-
-      (limite !== null ? '<p class="mensaje-limite">' + enriquecer(C.mensajesLimite[limite]) + '</p>' : '') +
-
-      '<hr class="filete">' +
-      '<p class="antetitulo">' + escapar(C.etiquetas.herramienta) + '</p>' +
-      '<h2 class="subtitulo">' + escapar(h.nombre) + '</h2>' +
-      (h.intro ? '<p class="texto">' + enriquecer(h.intro) + '</p>' : '') +
-      '<ol class="pasos">' + pasos + '</ol>' +
-
-      '<hr class="filete">' +
-      '<h2 class="subtitulo">' + escapar(C.etiquetas.siguientePaso) + '</h2>' +
-      parrafos(r.siguientePaso) +
-      '<div class="acciones">' +
-        '<button type="button" class="boton boton--principal" data-accion="guardar">' + escapar(r.accionGratuita) + '</button>' +
-        '<a class="boton boton--secundario" href="' + escapar(enlace(r.accionSecundaria.enlace)) + '" target="_blank" rel="noopener">' + escapar(r.accionSecundaria.texto) + '</a>' +
-        '<button type="button" class="enlace" data-accion="imprimir">' + escapar(C.etiquetas.imprimir) + '</button>' +
-      '</div>' +
-
-      '<div class="bloque-correo" id="correo">' +
-        '<hr class="filete">' +
-        '<h2 class="subtitulo" tabindex="-1" id="titulo-correo">' + escapar(co.titulo) + '</h2>' +
-        '<p class="texto">' + enriquecer(co.texto) + '</p>' +
-        '<form class="formulario" novalidate>' +
-          '<div class="campo">' +
-            '<label for="nombre">' + escapar(co.campoNombre) + '</label>' +
-            '<input id="nombre" name="nombre" type="text" autocomplete="given-name" maxlength="80">' +
-          '</div>' +
-          '<div class="campo">' +
-            '<label for="email">' + escapar(co.campoCorreo) + '</label>' +
-            '<input id="email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" aria-describedby="info-correo">' +
-            '<p class="error" id="error-correo" hidden></p>' +
-          '</div>' +
-          '<div class="trampa" aria-hidden="true"><label for="web">Web</label><input id="web" name="web" type="text" tabindex="-1" autocomplete="off"></div>' +
-          '<p class="pequeno" id="info-correo">' + enriquecer(co.info) + '</p>' +
-          '<label class="casilla"><input type="checkbox" name="consentimiento"><span>' + escapar(co.consentimiento) + '</span></label>' +
-          '<p class="error" id="error-envio" role="alert" hidden></p>' +
-          '<div class="acciones">' +
-            '<button type="submit" class="boton boton--principal">' + escapar(co.boton) + '</button>' +
-            '<button type="button" class="enlace" data-accion="continuar">' + escapar(co.continuar) + '</button>' +
-          '</div>' +
-        '</form>' +
-      '</div>' +
-
+      '<p class="antetitulo">' + escapar(co.antetitulo) + '</p>' +
+      '<h1 class="titulo" tabindex="-1" data-foco>' + escapar(co.titulo) + '</h1>' +
+      '<form class="formulario" novalidate>' +
+        campo('nombre', co.campoNombre, 'text', 'given-name', 80, '') +
+        campo('email', co.campoCorreo, 'email', 'email', 254, ' inputmode="email"') +
+        campo('telefono', co.campoTelefono, 'tel', 'tel', 30, ' inputmode="tel"') +
+        '<div class="trampa" aria-hidden="true"><label for="web">Web</label><input id="web" name="web" type="text" tabindex="-1" autocomplete="off"></div>' +
+        '<p class="pequeno" id="info-datos">' + enriquecer(co.info) + '</p>' +
+        '<label class="casilla"><input type="checkbox" name="consentimiento"><span>' + escapar(co.consentimiento) + '</span></label>' +
+        '<p class="error" id="error-envio" role="alert" hidden></p>' +
+        '<div class="acciones">' +
+          '<button type="submit" class="boton boton--principal">' + escapar(co.boton) + '</button>' +
+        '</div>' +
+      '</form>' +
       '<hr class="filete">' +
       '<p class="pequeno nota-final">' + enriquecer(C.notaFinal) + '</p>';
 
     mostrar(html, {
-      clase: 'resultado',
+      clase: 'datos',
       alMostrar: function (el) {
-        var bloque = el.querySelector('#correo');
         var form = el.querySelector('.formulario');
-
-        el.querySelector('[data-accion="guardar"]').addEventListener('click', function () {
-          bloque.scrollIntoView({ behavior: movimientoReducido.matches ? 'auto' : 'smooth', block: 'start' });
-          window.setTimeout(function () { form.querySelector('#nombre').focus({ preventScroll: true }); }, movimientoReducido.matches ? 0 : 450);
-        });
-
-        el.querySelector('[data-accion="imprimir"]').addEventListener('click', function () {
-          window.print();
-        });
-
         form.addEventListener('submit', function (e) {
           e.preventDefault();
-          enviarConCorreo(form);
-        });
-
-        el.querySelector('[data-accion="continuar"]').addEventListener('click', function () {
-          enviarSinCorreo(form);
+          enviarDatos(form);
         });
       }
     });
   }
 
-  /* ---------- Envío al Worker ---------- */
-
-  function datosBase(form) {
-    return {
-      respuestas: estado.respuestas.map(function (r) { return LETRAS[r]; }),
-      resultado: estado.resultado,
-      origen: estado.origen,
-      web: form.querySelector('#web').value // campo trampa para robots
-    };
+  function campo(id, etiqueta, tipo, autocompletar, max, extra) {
+    return (
+      '<div class="campo">' +
+        '<label for="' + id + '">' + escapar(etiqueta) + '</label>' +
+        '<input id="' + id + '" name="' + id + '" type="' + tipo + '" autocomplete="' + autocompletar + '" maxlength="' + max + '" required aria-describedby="info-datos"' + extra + '>' +
+        '<p class="error" id="error-' + id + '" hidden></p>' +
+      '</div>'
+    );
   }
+
+  /* ---------- Envío al Worker ---------- */
 
   function correoValido(valor) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(valor);
   }
 
-  function enviar(datos) {
-    return fetch(CONFIG.workerUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(datos),
-      keepalive: true
-    });
+  function telefonoValido(valor) {
+    var digitos = valor.replace(/\D/g, '');
+    return /^[+\d\s().-]+$/.test(valor) && digitos.length >= 7 && digitos.length <= 15;
   }
 
-  function enviarConCorreo(form) {
-    var campoCorreo = form.querySelector('#email');
-    var errorCorreo = form.querySelector('#error-correo');
+  function marcarError(form, id, mensaje) {
+    var input = form.querySelector('#' + id);
+    var error = form.querySelector('#error-' + id);
+    if (mensaje) {
+      error.textContent = mensaje;
+      error.hidden = false;
+      input.setAttribute('aria-invalid', 'true');
+      input.setAttribute('aria-describedby', 'error-' + id + ' info-datos');
+    } else {
+      error.hidden = true;
+      input.removeAttribute('aria-invalid');
+      input.setAttribute('aria-describedby', 'info-datos');
+    }
+    return !mensaje;
+  }
+
+  function enviarDatos(form) {
     var errorEnvio = form.querySelector('#error-envio');
     var boton = form.querySelector('[type="submit"]');
-    var correo = campoCorreo.value.trim();
+    var nombre = form.querySelector('#nombre').value.trim();
+    var correo = form.querySelector('#email').value.trim();
+    var telefono = form.querySelector('#telefono').value.trim();
 
     errorEnvio.hidden = true;
 
-    if (!correoValido(correo)) {
-      errorCorreo.textContent = UI.errorCorreo;
-      errorCorreo.hidden = false;
-      campoCorreo.setAttribute('aria-invalid', 'true');
-      campoCorreo.setAttribute('aria-describedby', 'error-correo info-correo');
-      campoCorreo.focus();
+    var ok = [
+      marcarError(form, 'nombre', nombre ? '' : UI.errorNombre),
+      marcarError(form, 'email', correoValido(correo) ? '' : UI.errorCorreo),
+      marcarError(form, 'telefono', telefonoValido(telefono) ? '' : UI.errorTelefono)
+    ];
+    var primero = ['nombre', 'email', 'telefono'][ok.indexOf(false)];
+    if (primero) {
+      form.querySelector('#' + primero).focus();
       return;
     }
-    errorCorreo.hidden = true;
-    campoCorreo.removeAttribute('aria-invalid');
-    campoCorreo.setAttribute('aria-describedby', 'info-correo');
 
-    var datos = datosBase(form);
-    datos.nombre = form.querySelector('#nombre').value.trim();
-    datos.correo = correo;
-    datos.consentimiento = form.querySelector('[name="consentimiento"]').checked;
+    var datos = {
+      respuestas: estado.respuestas.map(function (r) { return LETRAS[r]; }),
+      resultado: estado.resultado,
+      origen: estado.origen,
+      nombre: nombre,
+      correo: correo,
+      telefono: telefono,
+      consentimiento: form.querySelector('[name="consentimiento"]').checked,
+      web: form.querySelector('#web').value // campo trampa para robots
+    };
 
     var textoBoton = boton.textContent;
     boton.disabled = true;
     boton.textContent = UI.enviando;
 
-    enviar(datos)
+    fetch(CONFIG.workerUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datos)
+    })
       .then(function (res) {
         if (!res.ok) throw new Error('HTTP ' + res.status);
-        estado.enviado = true;
-        pantallaFinal(true);
+        pantallaFinal();
       })
       .catch(function () {
         boton.disabled = false;
@@ -398,26 +348,13 @@
       });
   }
 
-  function enviarSinCorreo(form) {
-    if (!estado.enviado) {
-      var datos = datosBase(form);
-      datos.nombre = '';
-      datos.correo = '';
-      datos.consentimiento = false;
-      estado.enviado = true;
-      // keepalive permite que el envío termine aunque la persona salga de la página.
-      enviar(datos).catch(function () { /* sin correo: no bloqueamos a la persona */ });
-    }
-    pantallaFinal(false);
-  }
-
   /* ---------- Final ---------- */
 
-  function pantallaFinal(conCorreo) {
+  function pantallaFinal() {
     var html =
       '<p class="antetitulo">' + escapar(UI.finalAntetitulo) + '</p>' +
       '<h1 class="titulo" tabindex="-1" data-foco>' + escapar(UI.finalTitulo) + '</h1>' +
-      '<p class="texto">' + escapar(conCorreo ? UI.finalTextoCorreo : UI.finalTextoSinCorreo) + '</p>' +
+      '<p class="texto">' + escapar(UI.finalTexto) + '</p>' +
       '<hr class="filete filete--corto">' +
       '<div class="acciones">' +
         '<a class="boton boton--principal" href="' + escapar(enlace('web')) + '">' + escapar(UI.volver) + '</a>' +

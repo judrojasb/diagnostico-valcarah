@@ -2,13 +2,15 @@
  * Worker «diagnostico-valcarah»
  *
  * Recibe los datos de la autoevaluación (diagnostico.valcarah.com) y:
- *  - con correo: crea o actualiza el contacto en Systeme, rellena los campos
- *    personalizados y añade las etiquetas;
- *  - sin correo: guarda las respuestas, sin datos personales, en Cloudflare KV.
+ *  - crea o actualiza el contacto en Systeme (nombre, correo y teléfono son
+ *    obligatorios), rellena los campos personalizados y añade las etiquetas.
+ *
+ *  Versiones anteriores guardaban en Cloudflare KV las respuestas sin correo;
+ *  esos datos se pueden seguir descargando en /exportar.
  *
  * Configuración en el panel de Cloudflare:
  *  - Secreto SYSTEME_API_KEY  → clave de la API pública de Systeme (obligatorio).
- *  - Enlace KV  DIAGNOSTICOS  → espacio de nombres KV para las respuestas sin correo.
+ *  - Enlace KV  DIAGNOSTICOS  → datos antiguos sin correo (solo para /exportar).
  *  - Secreto EXPORT_TOKEN     → contraseña para descargar las estadísticas (opcional).
  *
  * API de Systeme: https://developer.systeme.io/reference/api
@@ -113,21 +115,16 @@ async function recibir(request, env) {
     return json({ ok: false, error: datos.error }, 400);
   }
 
-  if (datos.correo) {
-    if (!env.SYSTEME_API_KEY) {
-      console.error('Falta el secreto SYSTEME_API_KEY');
-      return json({ ok: false, error: 'Configuración incompleta' }, 500);
-    }
-    try {
-      await guardarEnSysteme(env, datos);
-    } catch (error) {
-      console.error('Error con Systeme:', error.message);
-      return json({ ok: false, error: 'No se pudo guardar el contacto' }, 502);
-    }
-    return json({ ok: true });
+  if (!env.SYSTEME_API_KEY) {
+    console.error('Falta el secreto SYSTEME_API_KEY');
+    return json({ ok: false, error: 'Configuración incompleta' }, 500);
   }
-
-  await guardarEnKV(env, datos);
+  try {
+    await guardarEnSysteme(env, datos);
+  } catch (error) {
+    console.error('Error con Systeme:', error.message);
+    return json({ ok: false, error: 'No se pudo guardar el contacto' }, 502);
+  }
   return json({ ok: true });
 }
 
@@ -145,13 +142,22 @@ function validar(cuerpo) {
   }
 
   const correo = typeof cuerpo.correo === 'string' ? cuerpo.correo.trim().toLowerCase() : '';
-  if (correo && (correo.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(correo))) {
+  if (!correo || correo.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(correo)) {
     return { error: 'Correo no válido' };
   }
 
   const nombre = typeof cuerpo.nombre === 'string'
     ? cuerpo.nombre.replace(/[\u0000-\u001F\u007F<>]/g, '').trim().slice(0, 80)
     : '';
+  if (!nombre) {
+    return { error: 'Falta el nombre' };
+  }
+
+  const telefono = typeof cuerpo.telefono === 'string' ? cuerpo.telefono.trim().slice(0, 30) : '';
+  const digitos = telefono.replace(/\D/g, '');
+  if (!/^[+\d\s().-]+$/.test(telefono) || digitos.length < 7 || digitos.length > 15) {
+    return { error: 'Teléfono no válido' };
+  }
 
   const origen = typeof cuerpo.origen === 'string'
     ? cuerpo.origen.trim().slice(0, 100).replace(/[^\p{L}\p{N} _.\-]/gu, '')
@@ -163,6 +169,7 @@ function validar(cuerpo) {
     resultado: calcularResultado(indices),
     nombre,
     correo,
+    telefono,
     consentimiento: cuerpo.consentimiento === true,
     origen: origen || 'directo'
   };
@@ -195,7 +202,8 @@ async function guardarEnSysteme(env, d) {
     { slug: 'origen', value: d.origen },
     { slug: 'respuestas', value: respuestasCompactas(d.indices) }
   ];
-  if (d.nombre) campos.push({ slug: 'first_name', value: d.nombre });
+  campos.push({ slug: 'first_name', value: d.nombre });
+  campos.push({ slug: 'phone_number', value: d.telefono });
 
   // 1. Crear o actualizar el contacto (antes de las etiquetas, para que las
   //    automatizaciones que se activan con la etiqueta ya vean los campos).
@@ -303,28 +311,8 @@ async function systeme(env, metodo, ruta, cuerpo, opciones = {}, intento = 0) {
 }
 
 /* ---------------------------------------------------------------------------
- * Cloudflare KV (respuestas sin correo)
+ * Cloudflare KV (datos antiguos sin correo)
  * ------------------------------------------------------------------------- */
-
-async function guardarEnKV(env, d) {
-  if (!env.DIAGNOSTICOS) {
-    console.warn('Sin enlace KV DIAGNOSTICOS: respuesta sin correo no guardada', JSON.stringify({ resultado: d.resultado, origen: d.origen }));
-    return;
-  }
-
-  const registro = {
-    fecha: new Date().toISOString(),
-    resultado: d.resultado,
-    respuestas: respuestasCompactas(d.indices),
-    origen: d.origen
-  };
-
-  // La fecha va en la clave para que el listado salga en orden cronológico.
-  const clave = `sin-correo:${registro.fecha}:${crypto.randomUUID().slice(0, 8)}`;
-
-  // Los metadatos repiten el registro para poder exportarlo sin leer cada valor.
-  await env.DIAGNOSTICOS.put(clave, JSON.stringify(registro), { metadata: registro });
-}
 
 /**
  * GET /exportar?token=…[&origen=…]
