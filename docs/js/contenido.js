@@ -14,7 +14,7 @@ window.VALCARAH_CONTENIDO = {
       'No hay respuestas correctas ni etapas mejores que otras. El resultado es una orientación para elegir tu siguiente paso.'
     ],
     boton: 'Empezar',
-    meta: '10 preguntas · Resultado en pantalla · Correo opcional',
+    meta: '10 preguntas · Resultado en tu correo',
     aviso: 'Esta es una herramienta de reflexión personal, no una evaluación psicológica.'
   },
 
@@ -109,133 +109,16 @@ window.VALCARAH_CONTENIDO = {
 
   botonFinal: 'Ver mi orientación',
 
-  // Mensaje adaptado según la respuesta a la pregunta 7 (a, b, c, d, e).
-  mensajesLimite: [
-    'Tu siguiente paso necesita caber en tu vida actual. Puedes reducir la acción o empezar por liberar un pequeño espacio.',
-    'Incluye un límite de gasto y una condición para cuidar tus ingresos. Explorar una posibilidad no exige dejar tu trabajo.',
-    'Busca un ejemplo concreto de algo que hayas aprendido, resuelto o enseñado. Utilízalo como información al elegir tu siguiente paso.',
-    'Define qué dato, herramienta o conversación necesitas antes de avanzar. Conseguirlo puede ser tu primera acción.',
-    'Adapta la herramienta a la condición que más influye en tu decisión actual.'
-  ],
-
-  resultados: {
-    caos: {
-      numero: 'I',
-      etapa: 'Caos',
-      subtitulo: 'Ordenar prioridades',
-      titular: 'Empieza por elegir qué merece espacio.',
-      parrafos: [
-        'Por tus respuestas, puede ayudarte ordenar lo que está pidiendo tu atención antes de definir un plan.',
-        'Quizá conviven responsabilidades, ideas y proyectos que te importan. Elegir una prioridad puede darte un punto de partida más manejable.',
-        'No significa resolver todo ni abandonar lo demás. Significa decidir qué atender primero, desde tu situación actual.'
-      ],
-      herramienta: {
-        nombre: 'Una prioridad con criterio propio',
-        intro: 'Reserva un momento breve y trabaja estos pasos:',
-        pasos: [
-          { t: 'Escribe hasta tres asuntos o proyectos que quieras atender.', d: 'Limita la lista para poder trabajar con ella.' },
-          { t: 'Elige dos valores que quieras cuidar al decidir.', d: 'Por ejemplo: estabilidad, autonomía, familia, aprendizaje, salud, creatividad o contribución. Puedes añadir los tuyos.' },
-          { t: 'Revisa cada asunto.', sub: [
-            '¿Por qué importa para mí?',
-            '¿Qué cambiaría si le diera algo de atención?',
-            '¿Qué puedo hacer, en qué puedo influir y qué no controlo?',
-            '¿Qué espacio requiere en mi realidad actual?'
-          ] },
-          { t: 'Elige uno para las próximas dos semanas.', d: 'Completa: Mi prioridad será __________ porque quiero cuidar __________.' },
-          { t: 'Define una acción pequeña.', d: 'Haré __________ el día __________. Revisaré cómo me fue el día __________. Tu primera acción puede ser buscar información, pedir apoyo o reservar tiempo.' }
-        ]
-      },
-      siguientePaso: [
-        'Si necesitas ayuda para ordenar las opciones y elegir, puedes consultar una [sesión individual](sesionIndividual) conmigo. Si prefieres trabajar acompañada por otras mujeres, consulta los [talleres y círculos](talleresCirculos) disponibles.'
-      ],
-      accionGratuita: 'Guardar mi herramienta',
-      accionSecundaria: { texto: 'Explorar formas de acompañamiento', enlace: 'talleresCirculos' }
-    },
-
-    claridad: {
-      numero: 'II',
-      etapa: 'Claridad',
-      subtitulo: 'Elegir una dirección',
-      titular: 'Convierte lo que te importa en una decisión posible.',
-      parrafos: [
-        'Por tus respuestas, parece que hay algo a lo que quieres dar espacio, pero necesitas elegir cómo avanzar o concretar el inicio.',
-        'Puede que estés comparando opciones, buscando información o cuidando una estabilidad que te ha costado construir.',
-        'Tu siguiente paso puede ser una decisión pequeña que te permita explorar una dirección y aprender antes de comprometer más tiempo o recursos.'
-      ],
-      herramienta: {
-        nombre: 'Dos opciones, una decisión',
-        intro: '',
-        pasos: [
-          { t: 'Escribe la decisión que necesitas tomar.', d: 'Por ejemplo: Quiero decidir qué proyecto retomar primero.' },
-          { t: 'Define dos opciones concretas.', d: 'Evita comparar una opción real con una idea perfecta e indefinida.' },
-          { t: 'Elige hasta tres criterios propios.', d: 'Puedes considerar valores personales, tiempo, coste, estabilidad económica, aprendizaje o responsabilidades.' },
-          { t: 'Compara las opciones.', d: 'Para cada una, responde:', sub: [
-            '¿Cómo encaja con mis criterios?',
-            '¿Qué requiere de mí?',
-            '¿Qué necesito averiguar?',
-            '¿Puedo probarla a pequeña escala?'
-          ] },
-          { t: 'Elige una decisión o una prueba.', d: 'Si tienes información suficiente: Durante las próximas dos semanas voy a explorar __________. Si todavía te falta información: Antes de decidir, voy a comprobar __________ mediante __________.' },
-          { t: 'Pon fecha al primer paso y a la revisión.', d: 'Mi primera acción será __________ el día __________. Después revisaré __________.' }
-        ]
-      },
-      siguientePaso: [
-        'Una [sesión individual](sesionIndividual) puede ayudarte a contrastar opciones, aclarar tus criterios y salir con una decisión y una primera acción.'
-      ],
-      accionGratuita: 'Guardar mi herramienta',
-      accionSecundaria: { texto: 'Consultar la sesión individual', enlace: 'sesionIndividual' }
-    },
-
-    creacion: {
-      numero: 'III',
-      etapa: 'Creación',
-      subtitulo: 'Sostener acciones',
-      titular: 'Dale continuidad a lo que has elegido.',
-      parrafos: [
-        'Por tus respuestas, has definido una dirección y comenzado a actuar.',
-        'Ahora puede ayudarte revisar cómo encaja ese proyecto en tu vida, qué compromisos puedes mantener y qué ajustar cuando aparezcan obstáculos.',
-        'Avanzar también incluye cambiar una acción, reducir su tamaño o hacer una pausa con una fecha de revisión.'
-      ],
-      herramienta: {
-        nombre: 'Un compromiso que puedas sostener',
-        intro: '',
-        pasos: [
-          { t: 'Elige una acción que quieras mantener durante dos semanas.', d: 'Debe ser concreta y estar relacionada con tu prioridad.' },
-          { t: 'Comprueba que responde a tus criterios.', sub: [
-            '¿Por qué merece mi tiempo?',
-            '¿Qué valor quiero cuidar?',
-            '¿Es compatible con mis responsabilidades actuales?'
-          ] },
-          { t: 'Identifica un obstáculo probable.', d: 'Elige uno: cansancio, horario, dudas, interrupciones o falta de información.' },
-          { t: 'Prepara una respuesta concreta.', d: 'Completa: Si ocurre __________, entonces haré __________. Ejemplo: Si el jueves no puedo dedicar treinta minutos al proyecto, reservaré quince minutos el sábado para completar la parte más importante.' },
-          { t: 'Define una versión mínima.', d: 'En una semana difícil, mi compromiso mínimo será __________.' },
-          { t: 'Fija una revisión.', d: 'El día __________ revisaré qué funcionó, qué necesito cambiar y si quiero mantener esta prioridad.' }
-        ]
-      },
-      siguientePaso: [
-        'Puedes continuar con la herramienta o buscar acompañamiento para sostener y revisar tus decisiones.',
-        'Si tu proyecto consiste en emprender con tus conocimientos, puedes conocer [Valcarah Lab](valcarahLab) y comprobar si su programa encaja con tu idea, tu tiempo y tu presupuesto.'
-      ],
-      accionGratuita: 'Guardar mi herramienta',
-      accionSecundaria: { texto: 'Explorar mi siguiente paso', enlace: 'siguientePaso' }
-    }
-  },
-
-  etiquetas: {
-    herramienta: 'Tu herramienta',
-    siguientePaso: 'Tu siguiente paso',
-    imprimir: 'Imprimir o guardar como PDF'
-  },
-
+  // Pantalla final: datos obligatorios para recibir la orientación por correo.
   correo: {
-    titulo: '¿Quieres conservar tu orientación y la herramienta?',
-    texto: 'Déjame tu correo y te enviaré una copia para que puedas trabajar con ella cuando te venga bien.',
-    campoNombre: 'Nombre, opcional',
+    antetitulo: 'Autoevaluación Valcarah',
+    titulo: 'Pon tus datos para añadir tus respuestas.',
+    campoNombre: 'Nombre',
     campoCorreo: 'Correo electrónico',
-    info: 'Usaremos tu correo para enviarte el resultado y la herramienta solicitados. Consulta la [política de privacidad](privacidad).',
+    campoTelefono: 'Teléfono',
+    info: 'Usaremos tus datos para enviarte el resultado y la herramienta solicitados. Consulta la [política de privacidad](privacidad).',
     consentimiento: 'También quiero recibir las cartas de Judith y novedades de Valcarah. Puedo darme de baja cuando quiera.',
-    boton: 'Enviarme mi resultado',
-    continuar: 'Continuar sin dejar mi correo'
+    boton: 'Enviarme mi resultado'
   },
 
   notaFinal: 'Esta herramienta no evalúa tu salud mental ni sustituye un acompañamiento profesional. Si estás atravesando un malestar que dificulta tu vida cotidiana, puedes buscar apoyo profesional además de trabajar en tus proyectos.',
@@ -246,14 +129,14 @@ window.VALCARAH_CONTENIDO = {
     de: 'de',
     siguiente: 'Siguiente',
     anterior: 'Anterior',
-    etapas: 'Las tres etapas',
+    errorNombre: 'Escribe tu nombre.',
     errorCorreo: 'Escribe un correo electrónico válido.',
+    errorTelefono: 'Escribe un teléfono válido, con prefijo si no es de España.',
     errorEnvio: 'No hemos podido enviar tus datos. Inténtalo de nuevo en unos minutos.',
     enviando: 'Enviando…',
     finalAntetitulo: 'Autoevaluación Valcarah',
     finalTitulo: 'Gracias',
-    finalTextoCorreo: 'Tu orientación y la herramienta están de camino a tu correo.',
-    finalTextoSinCorreo: 'Has dedicado este tiempo a tu proyecto. Ese ya es un primer paso.',
+    finalTexto: 'Tu orientación y la herramienta están de camino a tu correo.',
     volver: 'Volver a Valcarah'
   }
 };
