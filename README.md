@@ -123,3 +123,13 @@ Para cada etapa:
 | `diagnostico-creacion` | …: sostener | sostener acciones | Un compromiso que puedas sostener |
 
 Para el nombre puedes usar la variable de nombre de Systeme (`first_name`).
+
+Enlaces de las herramientas para cada correo:
+
+| Etapa | Enlace |
+|---|---|
+| Caos | https://diagnostico.valcarah.com/herramientas/caos |
+| Claridad | https://diagnostico.valcarah.com/herramientas/claridad |
+| Creación | https://diagnostico.valcarah.com/herramientas/creacion |
+
+Las páginas están en `docs/herramientas/<etapa>/index.html`. Son independientes: llevan el estilo y el logo dentro del propio archivo.
